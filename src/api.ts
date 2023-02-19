@@ -79,13 +79,13 @@ export function createAPI(ctx: PWAPluginContext): VitePluginPWAAPI {
         manifest = generateWebManifest(options, true)
         // Inject document base
         if (options.base.length > 1)
-          manifest += `<base href="${options.base}" />`
+          manifest += `\n<base href="${options.base}" />`
       }
       else {
         manifest = generateWebManifest(options, false)
         // Inject document base
         if (options.buildBase.length > 1)
-          manifest += `<base href="${options.buildBase}" />`
+          manifest += `\n<base href="${options.buildBase}" />`
       }
 
       return {
