@@ -65,21 +65,31 @@ export function createAPI(ctx: PWAPluginContext): VitePluginPWAAPI {
     },
     webManifestData() {
       const options = ctx?.options
-      if (!options || options.disable || !options.manifest || (ctx.devEnvironment && !ctx.options.devOptions.enabled))
+      console.log('\n* webManifestData')
+      console.log(`options.mode: ${options.mode}`)
+      console.log(`ctx.devEnvironment: ${ctx.devEnvironment}`)
+      console.log(`ctx.options.devOptions.enabled: ${ctx.options.devOptions.enabled}`)
+      if (!options || options.disable || !options.manifest || (options.mode != 'production' && ctx.devEnvironment && !ctx.options.devOptions.enabled))
         return undefined
 
       let url = options.manifestFilename
       let manifest: string
-      if (ctx.devEnvironment && ctx.options.devOptions.enabled === true) {
+      if (options.mode != 'production' && ctx.devEnvironment && ctx.options.devOptions.enabled === true) {
         url = ctx.options.devOptions.webManifestUrl ?? options.manifestFilename
         manifest = generateWebManifest(options, true)
+        // Inject document base
+        if (options.base.length > 1)
+          manifest += `<base href="${options.base}" />`
       }
       else {
         manifest = generateWebManifest(options, false)
+        // Inject document base
+        if (options.buildBase.length > 1)
+          manifest += `<base href="${options.buildBase}" />`
       }
 
       return {
-        href: `${ctx.devEnvironment ? options.base : options.buildBase}${url}`,
+        href: `${options.mode != 'production' && ctx.devEnvironment ? options.base : options.buildBase}${url}`,
         useCredentials: ctx.options.useCredentials,
         toLinkTag() {
           return manifest
