@@ -69,8 +69,8 @@ export function createAPI(ctx: PWAPluginContext): VitePluginPWAAPI {
       console.log(`options.mode: ${options.mode}`)
       console.log(`ctx.devEnvironment: ${ctx.devEnvironment}`)
       console.log(`ctx.options.devOptions.enabled: ${ctx.options.devOptions.enabled}`)
-      console.log('* ctx')
-      console.log(ctx)
+      console.log('* import,meta.env')
+      console.log(import.meta)
 
       if (!options || options.disable || !options.manifest || (options.mode != 'production' && ctx.devEnvironment && !ctx.options.devOptions.enabled))
         return undefined
